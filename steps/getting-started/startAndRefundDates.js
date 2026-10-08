@@ -1,4 +1,4 @@
-import { Then } from "@cucumber/cucumber";
+import { Given,Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { startApplicationPage } from "../../globalPagesSetup.js";
 import { productInfo } from "../../utilities/qa-data-reader.js";

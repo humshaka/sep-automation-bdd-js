@@ -1,4 +1,5 @@
 import { BasePage } from "./BasePage.js";
+import { expect } from "@playwright/test";
 
 export class StartApplicationPage extends BasePage {
   /**
@@ -6,6 +7,30 @@ export class StartApplicationPage extends BasePage {
    */
   constructor(page) {
     super(page);
+
+
+this.checkoutTitle = page.locator(
+  "app-personal-details .checkout-title"
+);
+
+this.termsAndConditionsLink = page.getByRole("link", {
+  name: "Terms and conditions",
+});
+
+this.privacyPolicyLink = page.getByRole("link", {
+  name: "Privacy Policy",
+});
+
+this.disclaimerLink = page.getByRole("link", {
+  name: "Disclaimer",
+});
+
+this.cookiePolicyLink = page.getByRole("link", {
+  name: "Cookie Policy",
+});
+
+
+
 
     this.startApplicationText = page.locator(
       "(//div[@class = 'step-title'])[1]"
@@ -107,9 +132,19 @@ export class StartApplicationPage extends BasePage {
       "//div[@class='col-sm']/b[@class = 'info-primary']"
     );
 
-    this.footer = page.locator(
-      "//p[@class = 'footer-text' and contains(text(), 'Need help?')]"
-    );
+
+    this.footer = page.getByText(
+    "Need help? Contact us at enrollment@cydeo.com",
+    { exact: true }
+    ).first();
+
+
+
+
+this.footerLogo = page.locator(
+  'img[src="assets/images/logo.svg"][style="max-height: 30px;"]'
+);
+
 
     this.nextButton = page.locator(
       "//button[@class = 'next-button'][contains(text(), 'Next')]"
@@ -125,8 +160,34 @@ export class StartApplicationPage extends BasePage {
 
     this.originalPrice = page.locator("//s[contains(.,'$')]");
 
-    
+
   }
+
+
+async verifyFooterOrder() {
+  const footerItems = [
+    this.footerLogo,
+    this.termsAndConditionsLink,
+    this.privacyPolicyLink,
+    this.disclaimerLink,
+    this.cookiePolicyLink,
+  ];
+
+  const positions = await Promise.all(
+    footerItems.map(async (item) => {
+      const box = await item.boundingBox();
+
+      if (!box) {
+        throw new Error("A footer item is not visible.");
+      }
+
+      return box.x;
+    })
+  );
+
+  expect(positions).toEqual([...positions].sort((a, b) => a - b));
+}
+
 
   /**
    * @param {string} firstName
