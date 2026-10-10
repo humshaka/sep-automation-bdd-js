@@ -11,7 +11,33 @@ Feature: Display the product information
     #* AC6: The return policy and the final date for returns should be displayed.
 
 
-    #TODO: Create scenarios that cover all the acceptance criteria
+
 
     Background:
         Given user is on the enrollment page
+
+
+    @sep09
+    Scenario: Verify product name is displayed on the information card
+        Then the product name should be displayed on the information card
+
+    @sep09
+    Scenario: Verify product name matches the left side of the screen
+        Then the product name on the information card should match the product name on the left side
+
+    @sep09
+    Scenario: Verify product price is displayed
+        Then the product price should be displayed
+
+    @sep09
+    Scenario: Verify flexible payment plan text is displayed
+        Then the flexible payment plan text should be displayed
+
+    @sep09
+    Scenario: Verify program start date is displayed
+        Then the program start date should be displayed
+
+    @sep09
+    Scenario: Verify refund policy and final refund date are displayed
+        Then the refund policy text should be displayed
+        And the final refund date should be displayed
