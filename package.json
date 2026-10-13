@@ -4,12 +4,12 @@
   "main": "index.js",
   "scripts": {
     "test": "npx cucumber-js",
-    "test:dry-run": "npx cucumber-js --dry-run",
-    "test:tag": "npx cucumber-js --tags @sep11",
-    "test:sep07": "npx cucumber-js --tags @sep07",
-    "test:tag:dryrun": "npx cucumber-js --tags @sep11 --dry-run",
-    "Mac-open:report": "open reports/cucumber-report.html",
-    "Windows-open:report": "start reports/cucumber-report.html"
+"test:tag": "npx cucumber-js --tags @sep11",
+"test:sep07": "npx cucumber-js --tags @sep07",
+"test:tag:dryrun": "npx cucumber-js --tags @sep11 --dry-run",
+"test:smoke": "npx cucumber-js --tags @smoke",
+"Mac-open:report": "open reports/cucumber-report.html",
+"Windows-open:report": "start reports/cucumber-report.html"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@cucumber/cucumber": "^11.3.0",
-    "cucumber-html-reporter": "^7.2.0",
-    "dotenv": "^18.0.7"
+    "cucumber-html-reporter": "^7.2.0"
   }
 }

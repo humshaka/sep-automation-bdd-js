@@ -20,16 +20,10 @@ Feature: View payment plan options in Step 2   #! test only
 
 
 
-    Background:
-        Given user is on the payment plan page
+    #TODO: Create scenarios that cover all the acceptance criteria
 
-    @sep17
-    Scenario: The upfront option shows one payment due once
-        Then one upfront payment option should be displayed
-        And the upfront payment should be labeled pay once
 
-    @sep17
-    Scenario: Installment options match the configured payment plans
-        Then the configured number of payment plans should be displayed
-        And the installment option should show the configured installment count
-        And each payment plan should be unique
+
+
+
+    

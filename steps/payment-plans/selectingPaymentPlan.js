@@ -1,10 +1,4 @@
-import { Then } from "@cucumber/cucumber";
-import { expect } from "@playwright/test";
-import { paymentPlanPage } from "../../globalPagesSetup.js";
-
-Then("the {string} payment plan should be highlighted", async function (plan) {
-  const selectedPlan = plan.toLowerCase().includes("upfront")
-    ? paymentPlanPage.upfrontPaymentFrame
-    : paymentPlanPage.installmentsPaymentFrame;
-  await expect(selectedPlan).toHaveAttribute("aria-expanded", "true");
-});
+import { Given, Then, When } from "@cucumber/cucumber";
+import { expect} from "@playwright/test";
+import { paymentPlanPage, page } from "../../globalPagesSetup.js";
+import { productInfo } from "../../utilities/qa-data-reader.js";

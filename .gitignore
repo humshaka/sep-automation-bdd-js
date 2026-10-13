@@ -2,8 +2,3 @@ node_modules/
 /reports
 /blob-report/
 /playwright/.cache/
-
-# Environment files
-.env
-.env.*
-!.env.example

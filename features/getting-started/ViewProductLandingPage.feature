@@ -9,11 +9,13 @@ Feature: View Product Landing Page
     #*      logo, Terms and Conditions, Privacy Policy, Disclaimer, Cookie Policy
 
     #* AC4: The system displays "Need help? Contact us at enrollment@cydeo.com" in the footer on the right.
+    #TODO: Create scenarios that cover all the acceptance criteria
+
     Background:
         Given user is on the enrollment page
 
     Scenario: Verify that Cydeo Secure Checkout is displayed
-        Then the Cydeo Secure Checkout text should be displayed
+        Then   the Cydeo Secure Checkout test should be displayed
 
     Scenario: Verify that the programme name is displayed
         Then the programme name should be displayed

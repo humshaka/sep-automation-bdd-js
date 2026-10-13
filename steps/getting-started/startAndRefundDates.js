@@ -8,7 +8,7 @@ Given("user is on the enrollment page", async function () {
   await startApplicationPage.login();
 });
 
-Then("the programme start date is displayed", async function () {
+Then("the programme start date is diplayed", async function () {
   await expect(startApplicationPage.programStartDate).toBeVisible();
 });
 

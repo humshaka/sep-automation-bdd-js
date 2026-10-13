@@ -2,8 +2,10 @@ import { Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
 import { startApplicationPage } from "../../globalPagesSetup.js";
 
-Then("the Cydeo Secure Checkout text should be displayed", async function () {
-  await expect(startApplicationPage.checkoutTitle).toBeVisible();
+Then("the Cydeo Secure Checkout test should be displayed", async function () {
+
+     await expect(startApplicationPage.checkoutTitle).toBeVisible();
+
 });
 Then("the programme name should be displayed", async function () {
     await expect(startApplicationPage.programNameOnInfoCard).toBeVisible();

@@ -1,6 +1,5 @@
 import { BasePage } from "./BasePage.js";
 import { expect } from "@playwright/test";
-import { BrowserUtility } from "../utilities/BrowserUtility.js";
 
 export class StartApplicationPage extends BasePage {
   /**
@@ -187,36 +186,28 @@ export class StartApplicationPage extends BasePage {
    * @param {string} firstName
    */
   async enterFirstName(firstName) {
-    await BrowserUtility.enter_input(this.firstNameInputBox, firstName);
+    await this.firstNameInputBox.fill(firstName);
   }
 
   /**
    * @param {string} lastName
    */
   async enterLastName(lastName) {
-    await BrowserUtility.enter_input(this.lastNameInputBox, lastName);
+    await this.lastNameInputBox.fill(lastName);
   }
 
   /**
    * @param {string} email
    */
   async enterEmail(email) {
-    await BrowserUtility.enter_input(this.emailInputBox, email);
+    await this.emailInputBox.fill(email);
   }
 
   /**
    * @param {string} phoneNumber
    */
   async enterPhoneNumber(phoneNumber) {
-    await BrowserUtility.enter_input(this.phoneNumberInputBox, phoneNumber);
-  }
-
-  /**
-   * @param {string} phoneNumber
-   */
-  async typePhoneNumber(phoneNumber) {
-    await this.phoneNumberInputBox.fill("");
-    await this.phoneNumberInputBox.pressSequentially(phoneNumber);
+    await this.phoneNumberInputBox.fill(phoneNumber);
   }
 
   /**

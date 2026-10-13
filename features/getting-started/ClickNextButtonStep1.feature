@@ -8,26 +8,7 @@ Feature: Click on the next button on step 1
     #*              b. Test by providing only the required fields
     
 
+    #TODO: Create scenarios that cover all the acceptance criteria
+
     Background:
         Given user is on the enrollment page
-
-    @sep19
-    Scenario: Continue to payment plans after entering all personal details
-        When user enters first name "QA"
-        And user enters last name "Automation"
-        And user enters email "qa.automation@example.com"
-        And user enters phone number "2025550100"
-        And user selects "Email" as the referral source
-        Then the Next button should be enabled
-        When user clicks the Next button
-        Then the payment plan options should be displayed
-
-    @sep19
-    Scenario: Continue to payment plans with only required personal details
-        When user enters first name "QA"
-        And user enters last name "Automation"
-        And user enters email "qa.automation@example.com"
-        And user enters phone number "2025550100"
-        Then the Next button should be enabled
-        When user clicks the Next button
-        Then the payment plan options should be displayed

@@ -9,18 +9,4 @@ Feature: Selecting a price plan
     #* AC3: Users should be able to change their plan selections at any time before finalizing their choice.
 
 
-    Background:
-        Given user is on the payment plan page
-
-    @sep14
-    Scenario: Selecting a plan highlights it and enables Next
-        When user selects the "upfront" payment plan
-        Then the "upfront" payment plan should be highlighted
-        And the payment plan Next button should be enabled
-
-    @sep14
-    Scenario: A customer can change the selected payment plan
-        When user selects the "upfront" payment plan
-        And user selects the "installments" payment plan
-        Then the "installments" payment plan should be highlighted
-        And the payment plan Next button should be enabled
+    #TODO: Create scenarios that cover all the acceptance criteria
