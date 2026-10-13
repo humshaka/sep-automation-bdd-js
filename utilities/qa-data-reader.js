@@ -92,7 +92,7 @@ class Product {
 }
 
 // Instantiate the Product object
-export const productInfo = new Product(JSON.parse(readFileSync('./data/qa_data.json', 'utf8')));
+export const productInfo = new Product(JSON.parse(readFileSync('./test-data/qa_data.json', 'utf8')));
 
 
 
