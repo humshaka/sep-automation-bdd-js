@@ -1,4 +1,5 @@
 import { BasePage } from "./BasePage.js";
+import { BrowserUtility } from "../utilities/BrowserUtility.js";
 
 export class ReviewPaymentPage extends BasePage {
   /**
@@ -89,6 +90,7 @@ export class ReviewPaymentPage extends BasePage {
     this.termsAgreementTextPop = page.locator(
       "//h1[@id='mat-mdc-dialog-title-0']"
     );
+    this.confirmationContent = page.locator("body");
 
     
   }
@@ -97,28 +99,28 @@ export class ReviewPaymentPage extends BasePage {
    * @param {string} [cardNumber]
    */
   async enterCardNumber(cardNumber = process.env.CARD_NUMBER) {
-    await this.cardNumberInput.fill(cardNumber);
+    await BrowserUtility.enter_input(this.cardNumberInput, cardNumber);
   }
 
   /**
    * @param {string} [expiryDate]
    */
   async enterExpiryDate(expiryDate = process.env.CARD_EXPIRATION_DATE) {
-    await this.expiryDateInput.fill(expiryDate);
+    await BrowserUtility.enter_input(this.expiryDateInput, expiryDate);
   }
 
   /**
    * @param {string} [cvc]
    */
   async enterCVC(cvc = process.env.CARD_SECURITY_CODE) {
-    await this.cvcInput.fill(cvc);
+    await BrowserUtility.enter_input(this.cvcInput, cvc);
   }
 
   /**
    * @param {string} [zipCode]
    */
   async enterZipCode(zipCode = process.env.ZIP_CODE) {
-    await this.zipCodeInput.fill(zipCode);
+    await BrowserUtility.enter_input(this.zipCodeInput, zipCode);
   }
 
   async clickTermsAndConditionsCheckbox() {

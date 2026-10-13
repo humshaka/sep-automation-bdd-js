@@ -11,8 +11,15 @@ Feature: Make a payment
     #* AC4: The correct user email should be displayed.
     #* AC5: The correct company contact information should be displayed.
 
+    Background:
+        Given user is on the review payment page
 
-    #TODO: Create scenarios that cover all the acceptance criteria
-
-
+    @sep23
+    Scenario: A valid card payment completes enrollment
+        When user enters the configured valid card details
+        And user has accepted the terms and conditions
+        And user clicks the Pay button
+        Then the payment confirmation should be displayed
+        And all checkout steps should be complete
+        And the confirmation should show the program and company contact information
 

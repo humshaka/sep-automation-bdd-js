@@ -3,6 +3,8 @@
  * It provides options for parallel execution, paths to feature files, step definitions, hooks,
  * report formats, snippet interface, and world parameters.
  */
+require("dotenv").config();
+
 module.exports = {
   
   default: {

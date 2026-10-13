@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BDD Test Automation Lifecycle — Visual Interactive Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: rgba(17, 24, 39, 0.78);
+      --bg-card-hover: rgba(28, 38, 59, 0.88);
+      --bg-panel: rgba(13, 19, 33, 0.92);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(99, 102, 241, 0.5);
+      
+      --cyan-glow: #00f2fe;
+      --cyan-subtle: rgba(0, 242, 254, 0.15);
+      --purple-glow: #a855f7;
+      --purple-subtle: rgba(168, 85, 247, 0.15);
+      --emerald-glow: #10b981;
+      --emerald-subtle: rgba(16, 185, 129, 0.15);
+      --amber-glow: #f59e0b;
+      --amber-subtle: rgba(245, 158, 11, 0.15);
+      --rose-glow: #f43f5e;
+      --rose-subtle: rgba(244, 63, 94, 0.15);
+      --blue-glow: #38bdf8;
+      --blue-subtle: rgba(56, 189, 248, 0.15);
+
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+
+      --font-display: 'Outfit', sans-serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Fira Code', monospace;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+
+      --shadow-glow: 0 0 35px -5px rgba(99, 102, 241, 0.25);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(0, 242, 254, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(9, 13, 22, 0.8) 0%, rgba(9, 13, 22, 1) 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Top Navigation Bar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #6366f1, #00f2fe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
+      font-size: 1.25rem;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #ffffff, #c7d2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(0, 242, 254, 0.25));
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      color: #e0e7ff;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-action:hover {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(0, 242, 254, 0.4));
+      border-color: var(--cyan-glow);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .hero-container {
+      max-width: 1350px;
+      margin: 2.5rem auto 1.5rem auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #c7d2fe;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-pill-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald-glow);
+      box-shadow: 0 0 10px var(--emerald-glow);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 70%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      max-width: 860px;
+      margin: 0 auto 2rem auto;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      background: rgba(17, 24, 39, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      min-width: 160px;
+    }
+
+    .stat-val {
+      font-family: var(--font-display);
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .stat-lbl {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    /* Main Container */
+    .main-content {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    /* Section Headers */
+    .section-head {
+      margin-bottom: 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .section-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--cyan-glow);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 750px;
+    }
+
+    /* Interactive Flowchart Container */
+    .flowchart-wrapper {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .flowchart-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan-glow), var(--purple-glow), transparent);
+    }
+
+    .flowchart-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .flow-legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    .dot-trigger { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+    .dot-agent { background: #a855f7; box-shadow: 0 0 8px #a855f7; }
+    .dot-tool { background: #10b981; box-shadow: 0 0 8px #10b981; }
+    .dot-decision { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+    .dot-fail { background: #f43f5e; box-shadow: 0 0 8px #f43f5e; }
+
+    /* Flowchart Grid Layout with Dynamic Inspector */
+    .flow-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1100px) {
+      .flow-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .diagram-scroll {
+      width: 100%;
+      overflow-x: auto;
+      padding: 1rem 0;
+      border-radius: var(--radius-md);
+      background: rgba(9, 13, 22, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      position: relative;
+    }
+
+    /* SVG Interactive Nodes */
+    svg.flow-svg {
+      width: 100%;
+      min-width: 750px;
+      height: auto;
+      display: block;
+    }
+
+    .svg-node {
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .svg-node rect, .svg-node polygon {
+      transition: var(--transition);
+    }
+
+    .svg-node:hover rect {
+      filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.6));
+      stroke: var(--cyan-glow);
+      stroke-width: 2.5px;
+    }
+
+    .svg-node.active rect {
+      filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.8));
+      stroke: #a855f7;
+      stroke-width: 3px;
+    }
+
+    .svg-node text {
+      user-select: none;
+      font-family: var(--font-sans);
+    }
+
+    /* Interactive Node Inspector Panel */
+    .inspector-panel {
+      background: rgba(13, 19, 33, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      position: relative;
+    }
+
+    .inspector-panel::before {
+      content: 'LIVE STAGE INSPECTOR';
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--cyan-glow);
+      font-weight: 700;
+      display: block;
+    }
+
+    .inspect-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .inspect-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+    }
+
+    .inspect-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .inspect-meta {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    .inspect-body {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .inspect-kv-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      background: rgba(9, 13, 22, 0.7);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .inspect-kv {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .inspect-k {
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-weight: 500;
+    }
+
+    .inspect-v {
+      color: #e2e8f0;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .inspect-code {
+      background: #060911;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    /* Sub-Agent Command Center */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .agent-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      position: relative;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .agent-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .agent-card.planner:hover { border-color: var(--blue-glow); box-shadow: 0 10px 30px var(--blue-subtle); }
+    .agent-card.explorer:hover { border-color: var(--cyan-glow); box-shadow: 0 10px 30px var(--cyan-subtle); }
+    .agent-card.generator:hover { border-color: var(--purple-glow); box-shadow: 0 10px 30px var(--purple-subtle); }
+    .agent-card.healer:hover { border-color: var(--rose-glow); box-shadow: 0 10px 30px var(--rose-subtle); }
+
+    .agent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .agent-avatar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .agent-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .avatar-planner { background: linear-gradient(135deg, #1e3a8a, #3b82f6); color: #fff; }
+    .avatar-explorer { background: linear-gradient(135deg, #065f46, #00f2fe); color: #fff; }
+    .avatar-generator { background: linear-gradient(135deg, #581c87, #a855f7); color: #fff; }
+    .avatar-healer { background: linear-gradient(135deg, #881337, #f43f5e); color: #fff; }
+
+    .agent-title-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .agent-role {
+      font-size: 0.74rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .agent-badge-tag {
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .badge-planner { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-explorer { background: rgba(0, 242, 254, 0.15); color: #a5f3fc; border: 1px solid rgba(0, 242, 254, 0.3); }
+    .badge-generator { background: rgba(168, 85, 247, 0.15); color: #e9d5ff; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-healer { background: rgba(244, 63, 94, 0.15); color: #fecdd3; border: 1px solid rgba(244, 63, 94, 0.3); }
+
+    .agent-desc {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .agent-specs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      background: rgba(9, 13, 22, 0.6);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.8rem;
+    }
+
+    .spec-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .spec-label {
+      color: var(--text-dim);
+      min-width: 75px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+    }
+
+    .spec-val {
+      color: #d1d5db;
+      font-weight: 500;
+    }
+
+    .agent-footer {
+      margin-top: auto;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+    }
+
+    /* 1-to-1 AC-to-Scenario Interactive Demonstration */
+    .mapping-container {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .mapping-grid {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .mapping-grid {
+        grid-template-columns: 1fr;
+      }
+      .mapping-arrow {
+        transform: rotate(90deg);
+        margin: 1rem 0;
+      }
+    }
+
+    .mapping-box {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .box-header {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.65rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .box-badge {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .badge-req { background: rgba(245, 158, 11, 0.15); color: #fde68a; }
+    .badge-code { background: rgba(16, 185, 129, 0.15); color: #a7f3d0; }
+
+    .code-view {
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: #94a3b8;
+      overflow-x: auto;
+      max-height: 380px;
+      line-height: 1.6;
+    }
+
+    .code-view .hl-comment { color: #64748b; font-style: italic; }
+    .code-view .hl-tag { color: #38bdf8; font-weight: 600; }
+    .code-view .hl-keyword { color: #f43f5e; font-weight: 600; }
+    .code-view .hl-string { color: #a3e635; }
+    .code-view .hl-ac { color: #f59e0b; font-weight: 700; background: rgba(245, 158, 11, 0.1); padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+    .mapping-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .arrow-icon {
+      font-size: 1.8rem;
+      color: var(--cyan-glow);
+      filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.6));
+      animation: bounceX 2s infinite;
+    }
+
+    @keyframes bounceX {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(6px); }
+    }
+
+    /* 3-Tier Self-Healing Simulator */
+    .healing-simulator {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 950px) {
+      .healing-simulator {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sim-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sim-control-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .scenario-btn {
+      background: rgba(9, 13, 22, 0.8);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: var(--transition);
+    }
+
+    .scenario-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .scenario-btn.active {
+      border-color: var(--purple-glow);
+      background: rgba(168, 85, 247, 0.12);
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+    }
+
+    .scenario-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .scenario-desc {
+      font-size: 0.76rem;
+      color: var(--text-dim);
+    }
+
+    .sim-display {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      position: relative;
+    }
+
+    .tier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .tier-1 { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tier-2 { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tier-3 { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+
+    .sim-flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .flow-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .flow-step-idx {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.5);
+      color: #c7d2fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .flow-step-text {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    .flow-step-text strong {
+      color: #fff;
+    }
+
+    /* Terminal Simulator */
+    .terminal-wrapper {
+      background: #060911;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 242, 254, 0.1);
+      overflow: hidden;
+    }
+
+    .terminal-topbar {
+      background: rgba(17, 24, 39, 0.9);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .term-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-close { background: #ef4444; }
+    .dot-min { background: #eab308; }
+    .dot-max { background: #22c55e; }
+
+    .term-title {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .term-chips {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .term-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .term-chip:hover {
+      background: rgba(99, 102, 241, 0.2);
+      color: #fff;
+      border-color: var(--blue-glow);
+    }
+
+    .term-body {
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+      min-height: 320px;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .term-line {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .term-p { color: #a855f7; font-weight: 600; }
+    .term-cmd { color: #38bdf8; font-weight: 600; }
+    .term-ok { color: #34d399; }
+    .term-warn { color: #fbbf24; }
+    .term-info { color: #94a3b8; }
+    .term-err { color: #f87171; }
+    .term-accent { color: #c084fc; }
+
+    /* Quality Gates 6-Point Checklist */
+    .gate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .gate-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: var(--transition);
+    }
+
+    .gate-card:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: var(--bg-card-hover);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1);
+    }
+
+    .gate-top {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .gate-num {
+      width: 26px;
+      height: 26px;
+      border-radius: var(--radius-sm);
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .gate-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .gate-rule {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .gate-rule code {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+      color: #38bdf8;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    /* Lifecycle State Matrix Table */
+    .table-wrapper {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      overflow-x: auto;
+    }
+
+    table.matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      text-align: left;
+    }
+
+    table.matrix-table th {
+      padding: 0.85rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    table.matrix-table td {
+      padding: 0.95rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+    }
+
+    table.matrix-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+      color: #fff;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .pill-perm { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .pill-purge { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
+    .pill-active { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .pill-mem { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 3rem 2rem;
+      text-align: center;
+      background: rgba(9, 13, 22, 0.95);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      align-items: center;
+    }
+
+    .footer-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--cyan-glow);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar { padding: 0.75rem 1rem; }
+      .nav-links { display: none; }
+      .hero-title { font-size: 2.2rem; }
+      .hero-stats { gap: 1rem; }
+      .stat-item { min-width: 130px; }
+      .main-content { padding: 0 1rem; gap: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <nav class="navbar" id="topNav">
+    <div class="brand-group">
+      <div class="brand-badge" id="brandBadge">⚡</div>
+      <div>
+        <div class="brand-title">SEP BDD Engine</div>
+        <div class="brand-sub">Multi-Agent Lifecycle</div>
+      </div>
+    </div>
+
+    <ul class="nav-links">
+      <li><a class="nav-link active" href="#flowchart" id="navFlow">Flowchart</a></li>
+      <li><a class="nav-link" href="#agents" id="navAgents">4 Sub-Agents</a></li>
+      <li><a class="nav-link" href="#mapping" id="navMapping">1:1 AC Engine</a></li>
+      <li><a class="nav-link" href="#healing" id="navHealing">Self-Healing</a></li>
+      <li><a class="nav-link" href="#quality" id="navQuality">Quality Gates</a></li>
+      <li><a class="nav-link" href="#terminal" id="navTerminal">CLI Simulator</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="btn-action" id="btnRunSep17" onclick="runSimCommand('@sep17')">
+        <span>▶</span> Run @sep17
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-container">
+    <div class="hero-pill">
+      <span class="hero-pill-pulse"></span>
+      Playwright & Cucumber.js Autonomous Swarm
+    </div>
+    <h1 class="hero-title">BDD Test Automation Lifecycle</h1>
+    <p class="hero-desc">
+      An enterprise autonomous multi-agent orchestration architecture that transforms acceptance criteria into verified, production-grade Gherkin feature files, step definitions, and Pull Requests with zero human intervention.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-val">4</span>
+        <span class="stat-lbl">Specialized Agents</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">1 : 1</span>
+        <span class="stat-lbl">AC-to-Scenario Mapping</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">3-Tier</span>
+        <span class="stat-lbl">Self-Healing Classification</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">0ms</span>
+        <span class="stat-lbl">Hardcoded Sleeps Allowed</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Section 1: End-to-End Interactive Flowchart -->
+    <section id="flowchart">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-badge">// STAGE ORCHESTRATION</span>
+          <h2 class="section-title">End-to-End Architecture Flowchart</h2>
+          <p class="section-desc">Click any node in the flowchart below to inspect its responsibility, MCP tools, inputs, outputs, and execution mechanics.</p>
+        </div>
+        <div class="flow-legend">
+          <div class="legend-tag"><span class="legend-dot dot-trigger"></span> Trigger / Resolver</div>
+          <div class="legend-tag"><span class="legend-dot dot-agent"></span> Specialized Agent</div>
+          <div class="legend-tag"><span class="legend-dot dot-tool"></span> Tool / Runner</div>
+          <div class="legend-tag"><span class="legend-dot dot-decision"></span> Decision Gate</div>
+          <div class="legend-tag"><span class="legend-dot dot-fail"></span> Halt / Bug Report</div>
+        </div>
+      </div>
+
+      <div class="flowchart-wrapper">
+        <div class="flow-layout">
+          <!-- Interactive SVG Diagram -->
+          <div class="diagram-scroll">
+            <svg class="flow-svg" viewBox="0 0 760 920" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="gBlue" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#1e3a8a"/><stop offset="100%" stop-color="#3b82f6"/>
+                </linearGradient>
+                <linearGradient id="gPurple" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#4c1d95"/><stop offset="100%" stop-color="#8b5cf6"/>
+                </linearGradient>
+                <linearGradient id="gGreen" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#064e3b"/><stop offset="100%" stop-color="#10b981"/>
+                </linearGradient>
+                <linearGradient id="gAmber" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#78350f"/><stop offset="100%" stop-color="#f59e0b"/>
+                </linearGradient>
+                <linearGradient id="gRose" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#881337"/><stop offset="100%" stop-color="#f43f5e"/>
+                </linearGradient>
+                <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="4" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+
+              <!-- Connection Lines (Paths) -->
+              <g stroke="#334155" stroke-width="2" stroke-dasharray="4 4">
+                <line x1="380" y1="65" x2="380" y2="100" />
+                <line x1="380" y1="155" x2="380" y2="190" />
+                <line x1="380" y1="245" x2="380" y2="280" />
+                <line x1="380" y1="335" x2="380" y2="370" />
+                <line x1="380" y1="425" x2="380" y2="460" />
+                <line x1="380" y1="515" x2="380" y2="550" />
+                
+                <!-- Pass Branch -->
+                <path d="M 380 610 L 380 720" stroke="#10b981" stroke-width="2" />
+                
+                <!-- Fail Branch -->
+                <path d="M 445 580 L 590 580 L 590 640" stroke="#f43f5e" stroke-width="2" />
+
+                <!-- Healing Loop Back to Cucumber Runner -->
+                <path d="M 590 700 L 590 730 L 710 730 L 710 488 L 475 488" stroke="#a855f7" stroke-width="2" stroke-dasharray="3 3" />
+
+                <!-- Halt Discrepancy branches -->
+                <path d="M 530 670 L 480 670 L 480 770" stroke="#f59e0b" stroke-width="1.5" />
+                <path d="M 650 670 L 700 670 L 700 770" stroke="#f43f5e" stroke-width="1.5" />
+
+                <line x1="380" y1="775" x2="380" y2="805" />
+                <line x1="380" y1="860" x2="380" y2="890" />
+              </g>
+
+              <!-- Node 1: Trigger -->
+              <g class="svg-node" id="node-trigger" onclick="selectNode('trigger')">
+                <rect x="230" y="20" width="300" height="45" rx="22.5" fill="url(#gBlue)" stroke="#60a5fa" stroke-width="1.5"/>
+                <text x="380" y="47" fill="#ffffff" font-size="13" font-weight="600" text-anchor="middle">Trigger: /test-automation-lifecycle &lt;tag|path&gt;</text>
+              </g>
+
+              <!-- Node 2: Input Resolver -->
+              <g class="svg-node" id="node-resolve" onclick="selectNode('resolve')">
+                <rect x="220" y="100" width="320" height="55" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+                <text x="380" y="125" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">Stage 1: Input Resolver &amp; AC Ingestion</text>
+                <text x="380" y="143" fill="#94a3b8" font-size="11" text-anchor="middle">Scans features/**/*.feature &amp; extracts #* AC comments</text>
+              </g>
+
+              <!-- Node 3: Git Branch -->
+              <g class="svg-node" id="node-git" onclick="selectNode('git')">
+                <rect x="220" y="190" width="320" height="55" rx="10" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+                <text x="380" y="215" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">Stage 2: Git Branch Isolation</text>
+                <text x="380" y="233" fill="#34d399" font-size="11" text-anchor="middle">Creates branch: feature/&lt;target&gt;-automation</text>
+              </g>
+
+              <!-- Node 4: Planner Agent -->
+              <g class="svg-node" id="node-planner" onclick="selectNode('planner')">
+                <rect x="200" y="280" width="360" height="55" rx="10" fill="url(#gPurple)" stroke="#c084fc" stroke-width="1.5"/>
+                <text x="380" y="305" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle">Stage 3: 🧠 Planner Agent</text>
+                <text x="380" y="323" fill="#e9d5ff" font-size="11" text-anchor="middle">Enforces 1:1 AC-to-Scenario Rule &amp; POM Gap Audit</text>
+              </g>
+
+              <!-- Node 5: Explorer Agent -->
+              <g class="svg-node" id="node-explorer" onclick="selectNode('explorer')">
+                <rect x="200" y="370" width="360" height="55" rx="10" fill="#1e293b" stroke="#00f2fe" stroke-width="1.5"/>
+                <text x="380" y="395" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle">Stage 4: 🔍 Explorer Agent (Playwright MCP)</text>
+                <text x="380" y="413" fill="#67e8f9" font-size="11" text-anchor="middle">Audits live Angular DOM &amp; verifies user-facing locators</text>
+              </g>
+
+              <!-- Node 6: Generator Agent -->
+              <g class="svg-node" id="node-generator" onclick="selectNode('generator')">
+                <rect x="200" y="460" width="360" height="55" rx="10" fill="url(#gPurple)" stroke="#c084fc" stroke-width="1.5"/>
+                <text x="380" y="485" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle">Stage 5: ⚡ Generator Agent</text>
+                <text x="380" y="503" fill="#e9d5ff" font-size="11" text-anchor="middle">Synthesizes steps/*.js &amp; writes .feature scenarios</text>
+              </g>
+
+              <!-- Node 7: Decision Node (Cucumber Run) -->
+              <g class="svg-node" id="node-cuke" onclick="selectNode('cuke')">
+                <polygon points="380,550 445,580 380,610 315,580" fill="url(#gAmber)" stroke="#fbbf24" stroke-width="1.5"/>
+                <text x="380" y="577" fill="#ffffff" font-size="11" font-weight="700" text-anchor="middle">Cucumber Pass?</text>
+                <text x="380" y="591" fill="#fef3c7" font-size="9" text-anchor="middle">npx cucumber-js</text>
+              </g>
+
+              <!-- Label Pass -->
+              <text x="390" y="640" fill="#34d399" font-size="11" font-weight="700">100% Pass</text>
+              <!-- Label Fail -->
+              <text x="470" y="573" fill="#f87171" font-size="11" font-weight="700">Fail ➔</text>
+
+              <!-- Node 8: Healer Agent -->
+              <g class="svg-node" id="node-healer" onclick="selectNode('healer')">
+                <rect x="500" y="640" width="180" height="60" rx="8" fill="url(#gRose)" stroke="#fda4af" stroke-width="1.5"/>
+                <text x="590" y="665" fill="#ffffff" font-size="12" font-weight="700" text-anchor="middle">Stage 7: 🩹 Healer Agent</text>
+                <text x="590" y="683" fill="#ffe4e6" font-size="10" text-anchor="middle">3-Tier Failure Triage</text>
+              </g>
+
+              <!-- Healing Loop Label -->
+              <text x="645" y="725" fill="#c084fc" font-size="10" font-weight="600">Auto-Patch Loop (≤3x)</text>
+
+              <!-- Environmental Discrepancy Halt -->
+              <g class="svg-node" id="node-envhalt" onclick="selectNode('envhalt')">
+                <rect x="420" y="770" width="120" height="40" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1"/>
+                <text x="480" y="788" fill="#fbbf24" font-size="10" font-weight="600" text-anchor="middle">Env Failure</text>
+                <text x="480" y="800" fill="#94a3b8" font-size="8" text-anchor="middle">Log Discrepancy &amp; Halt</text>
+              </g>
+
+              <!-- Product Defect Bug Report -->
+              <g class="svg-node" id="node-bughalt" onclick="selectNode('bughalt')">
+                <rect x="640" y="770" width="120" height="40" rx="6" fill="#1e293b" stroke="#f43f5e" stroke-width="1"/>
+                <text x="700" y="788" fill="#fb7185" font-size="10" font-weight="600" text-anchor="middle">Product Defect</text>
+                <text x="700" y="800" fill="#94a3b8" font-size="8" text-anchor="middle">File Bug + Screenshot</text>
+              </g>
+
+              <!-- Node 9: Ephemeral Purge -->
+              <g class="svg-node" id="node-purge" onclick="selectNode('purge')">
+                <rect x="250" y="720" width="260" height="55" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+                <text x="380" y="745" fill="#f8fafc" font-size="13" font-weight="600" text-anchor="middle">Stage 8: Ephemeral Purge</text>
+                <text x="380" y="763" fill="#f43f5e" font-size="11" text-anchor="middle">Automatically deletes .temp/ scratch data</text>
+              </g>
+
+              <!-- Node 10: PR Summary & Reviewer -->
+              <g class="svg-node" id="node-pr" onclick="selectNode('pr')">
+                <rect x="210" y="805" width="340" height="55" rx="10" fill="url(#gGreen)" stroke="#34d399" stroke-width="1.5"/>
+                <text x="380" y="830" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle">Stage 9: 📝 /pr-summary &amp; /pr-reviewer</text>
+                <text x="380" y="848" fill="#d1fae5" font-size="11" text-anchor="middle">6-Point Quality Gate &amp; Executive Summary</text>
+              </g>
+
+              <!-- Node 11: PR Open -->
+              <g class="svg-node" id="node-done" onclick="selectNode('done')">
+                <rect x="230" y="890" width="300" height="30" rx="15" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+                <text x="380" y="910" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle">Pull Request Created on GitHub (Peer Review Ready) ✅</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Dynamic Inspector Panel -->
+          <div class="inspector-panel" id="inspectorPanel">
+            <div class="inspect-header">
+              <div class="inspect-icon" id="inspectIcon">🧠</div>
+              <div>
+                <h3 class="inspect-title" id="inspectTitle">Planner Agent</h3>
+                <span class="inspect-meta" id="inspectMeta">Stage 3 // Sub-Agent</span>
+              </div>
+            </div>
+
+            <p class="inspect-body" id="inspectDesc">
+              Responsible for requirement decomposition and architecture planning. Parses multi-line acceptance criteria comments (<code>#* AC</code>) and enforces the 1-to-1 AC-to-Scenario mapping standard. Conducts POM gap analysis and checks for existing steps in CommonSteps.js to eliminate duplication.
+            </p>
+
+            <div class="inspect-kv-list">
+              <div class="inspect-kv">
+                <span class="inspect-k">Agent Type:</span>
+                <span class="inspect-v" id="inspectType">Specialized BDD Planner</span>
+              </div>
+              <div class="inspect-kv">
+                <span class="inspect-k">MCP Access:</span>
+                <span class="inspect-v" id="inspectMcp">Read-only Context</span>
+              </div>
+              <div class="inspect-kv">
+                <span class="inspect-k">Input Data:</span>
+                <span class="inspect-v" id="inspectInput">#* AC comments &amp; POM class methods</span>
+              </div>
+              <div class="inspect-kv">
+                <span class="inspect-k">Output Artifact:</span>
+                <span class="inspect-v" id="inspectOutput">1:1 Scenario Matrix &amp; Step Plan</span>
+              </div>
+            </div>
+
+            <div class="inspect-code" id="inspectSnippet">
+# Planner Output Pattern:
+#* AC1 ➜ Scenario: @sep16-1
+#* AC2 ➜ Scenario: @sep16-2
+#* AC3 ➜ Scenario: @sep16-3</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: 4 Sub-Agents Deep Dive -->
+    <section id="agents">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-badge">// SWARM SPECIALIZATION</span>
+          <h2 class="section-title">The 4 Specialized BDD Sub-Agents</h2>
+          <p class="section-desc">Each agent has a strictly delineated role, specialized domain prompt, and enforced quality boundary.</p>
+        </div>
+      </div>
+
+      <div class="agent-grid">
+        <!-- Planner Agent -->
+        <div class="agent-card planner" id="cardPlanner" onclick="selectNode('planner')">
+          <div class="agent-header">
+            <div class="agent-avatar-wrap">
+              <div class="agent-avatar avatar-planner">🧠</div>
+              <div class="agent-title-box">
+                <h3>Planner Agent</h3>
+                <span class="agent-role">@planner</span>
+              </div>
+            </div>
+            <span class="agent-badge-tag badge-planner">Requirements</span>
+          </div>
+
+          <p class="agent-desc">
+            Deconstructs feature file header comments into discrete acceptance criteria. Enforces the strict 1-to-1 AC-to-Scenario rule, verifies existing steps in <code>CommonSteps.js</code> to eliminate duplicates, and maps catalog data from <code>qa-data-reader.js</code>.
+          </p>
+
+          <div class="agent-specs">
+            <div class="spec-row">
+              <span class="spec-label">Input:</span>
+              <span class="spec-val">Target feature file with #* AC comments</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Output:</span>
+              <span class="spec-val">Scenario outline matrix &amp; POM gap report</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Boundary:</span>
+              <span class="spec-val">Zero code generation; pure architectural plan</span>
+            </div>
+          </div>
+
+          <div class="agent-footer">
+            <span>Config: .github/agents/planner.agent.md</span>
+            <span>Deterministic</span>
+          </div>
+        </div>
+
+        <!-- Explorer Agent -->
+        <div class="agent-card explorer" id="cardExplorer" onclick="selectNode('explorer')">
+          <div class="agent-header">
+            <div class="agent-avatar-wrap">
+              <div class="agent-avatar avatar-explorer">🔍</div>
+              <div class="agent-title-box">
+                <h3>Explorer Agent</h3>
+                <span class="agent-role">@explorer</span>
+              </div>
+            </div>
+            <span class="agent-badge-tag badge-explorer">Playwright MCP</span>
+          </div>
+
+          <p class="agent-desc">
+            Connects to the live application via <code>@modelcontextprotocol/server-playwright</code>. Inspects the accessibility tree, verifies Angular SPA state reactivity (button enable/disable, stepper highlights), and discovers user-facing semantic locators.
+          </p>
+
+          <div class="agent-specs">
+            <div class="spec-row">
+              <span class="spec-label">Input:</span>
+              <span class="spec-val">Target UI workflows &amp; element candidate list</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Output:</span>
+              <span class="spec-val">Validated getByRole / semantic locators</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Boundary:</span>
+              <span class="spec-val">Bans brittle absolute XPaths; validates DOM</span>
+            </div>
+          </div>
+
+          <div class="agent-footer">
+            <span>Config: .github/agents/explorer.agent.md</span>
+            <span>Live DOM</span>
+          </div>
+        </div>
+
+        <!-- Generator Agent -->
+        <div class="agent-card generator" id="cardGenerator" onclick="selectNode('generator')">
+          <div class="agent-header">
+            <div class="agent-avatar-wrap">
+              <div class="agent-avatar avatar-generator">⚡</div>
+              <div class="agent-title-box">
+                <h3>Generator Agent</h3>
+                <span class="agent-role">@generator</span>
+              </div>
+            </div>
+            <span class="agent-badge-tag badge-generator">Code Synthesis</span>
+          </div>
+
+          <p class="agent-desc">
+            Synthesizes Cucumber step definitions in <code>steps/</code> and updates Page Objects in <code>pages/</code>. Employs web-first retrying assertions (<code>await expect(...)</code>), strictly forbids hardcoded sleeps, and runs <code>--dry-run</code> preflight verification.
+          </p>
+
+          <div class="agent-specs">
+            <div class="spec-row">
+              <span class="spec-label">Input:</span>
+              <span class="spec-val">Planned scenarios &amp; verified MCP locators</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Output:</span>
+              <span class="spec-val">Completed .feature scenarios &amp; steps/*.js</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Boundary:</span>
+              <span class="spec-val">Zero duplicate step definitions; ESM imports</span>
+            </div>
+          </div>
+
+          <div class="agent-footer">
+            <span>Config: .github/agents/generator.agent.md</span>
+            <span>Dry-Run Gate</span>
+          </div>
+        </div>
+
+        <!-- Healer Agent -->
+        <div class="agent-card healer" id="cardHealer" onclick="selectNode('healer')">
+          <div class="agent-header">
+            <div class="agent-avatar-wrap">
+              <div class="agent-avatar avatar-healer">🩹</div>
+              <div class="agent-title-box">
+                <h3>Healer Agent</h3>
+                <span class="agent-role">@healer</span>
+              </div>
+            </div>
+            <span class="agent-badge-tag badge-healer">Self-Healing</span>
+          </div>
+
+          <p class="agent-desc">
+            Autonomously triages test failures using Cucumber JSON reports and screenshots. Employs 3-tier classification: patches code if <code>automation-code</code>, alerts SDET if <code>environment data</code>, or files a bug report if <code>product defect</code>.
+          </p>
+
+          <div class="agent-specs">
+            <div class="spec-row">
+              <span class="spec-label">Input:</span>
+              <span class="spec-val">Stack trace, screenshot, failure step report</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Output:</span>
+              <span class="spec-val">Targeted code patch or Defect issue summary</span>
+            </div>
+            <div class="spec-row">
+              <span class="spec-label">Boundary:</span>
+              <span class="spec-val">Max 3 healing loops; halts on real app defects</span>
+            </div>
+          </div>
+
+          <div class="agent-footer">
+            <span>Config: .github/agents/healer.agent.md</span>
+            <span>3-Tier Guard</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: 1-to-1 AC-to-Scenario Mapping Engine -->
+    <section id="mapping">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-badge">// TRACEABILITY STANDARD</span>
+          <h2 class="section-title">The 1-to-1 AC-to-Scenario Mapping Engine</h2>
+          <p class="section-desc">Every individual Acceptance Criterion in the feature header produces exactly one dedicated Gherkin scenario. No criteria are grouped or dropped.</p>
+        </div>
+      </div>
+
+      <div class="mapping-container">
+        <div class="mapping-grid">
+          <!-- Left Box: Raw Header Comments -->
+          <div class="mapping-box">
+            <div class="box-header">
+              <span>ViewPaymentPlanOptionStep2.feature (Header)</span>
+              <span class="box-badge badge-req">Source AC Comments</span>
+            </div>
+            <div class="code-view">
+<span class="hl-comment">#* Acceptance Criteria:</span>
+<span class="hl-ac">#* AC1: Click on any payment plan option activates the next button</span>
+<span class="hl-ac">#* AC2: Clicking next button navigates to step 3 page</span>
+<span class="hl-ac">#* AC3: Stepper circles: 1 & 2 green, 3 blue</span>
+<span class="hl-ac">#* AC4: Payment component is displayed</span>
+<span class="hl-ac">#* AC5: Price summary is displayed</span>
+<span class="hl-ac">#* AC6: Back button is displayed and enabled</span>
+
+<span class="hl-tag">@sep17</span>
+<span class="hl-keyword">Feature:</span> View Payment Plan Options (Step 2)
+  <span class="hl-keyword">Background:</span>
+    <span class="hl-keyword">Given</span> user is on the enrollment page
+    <span class="hl-keyword">And</span> user has completed start application step
+            </div>
+          </div>
+
+          <!-- Middle Arrow -->
+          <div class="mapping-arrow">
+            <div class="arrow-icon">➔</div>
+            <span style="font-size: 0.68rem; font-family: var(--font-mono); color: var(--cyan-glow); text-align: center;">1:1 MAPPING ENGINE</span>
+          </div>
+
+          <!-- Right Box: Generated Dedicated Scenarios -->
+          <div class="mapping-box">
+            <div class="box-header">
+              <span>Completed Gherkin Scenarios</span>
+              <span class="box-badge badge-code">Traceable Execution</span>
+            </div>
+            <div class="code-view">
+  <span class="hl-tag">@sep17-1</span>
+  <span class="hl-keyword">Scenario Outline:</span> Verify clicking on &lt;plan&gt; activates next button
+    <span class="hl-keyword">When</span> user selects payment plan <span class="hl-string">"&lt;plan&gt;"</span>
+    <span class="hl-keyword">Then</span> next button should be enabled
+    <span class="hl-keyword">Examples:</span>
+      | plan |
+      | upfront |
+      | installments |
+
+  <span class="hl-tag">@sep17-2</span>
+  <span class="hl-keyword">Scenario:</span> Verify clicking next button navigates to step 3
+    <span class="hl-keyword">When</span> user clicks next button on payment plans
+    <span class="hl-keyword">Then</span> user should be navigated to review step 3
+
+  <span class="hl-tag">@sep17-3</span>
+  <span class="hl-keyword">Scenario:</span> Verify stepper circle states (1 & 2 green, 3 blue)
+    <span class="hl-keyword">Then</span> stepper circle 1 and 2 should be green
+    <span class="hl-keyword">And</span> stepper circle 3 should be blue
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem;">
+          <div style="flex: 1; min-width: 260px; background: rgba(9, 13, 22, 0.6); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <h4 style="font-size: 0.88rem; color: #fff; margin-bottom: 0.35rem;">🎯 100% Traceability</h4>
+            <p style="font-size: 0.78rem; color: var(--text-dim);">Product owners, QA leads, and developers can inspect test results and see exactly which business criterion passed or failed by tag.</p>
+          </div>
+          <div style="flex: 1; min-width: 260px; background: rgba(9, 13, 22, 0.6); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <h4 style="font-size: 0.88rem; color: #fff; margin-bottom: 0.35rem;">⚡ Parallel Worker Ready</h4>
+            <p style="font-size: 0.78rem; color: var(--text-dim);">Scenarios operate independently with shared Background isolation, allowing Cucumber to run them across multi-threaded workers safely.</p>
+          </div>
+          <div style="flex: 1; min-width: 260px; background: rgba(9, 13, 22, 0.6); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <h4 style="font-size: 0.88rem; color: #fff; margin-bottom: 0.35rem;">📝 Automated PR Summary</h4>
+            <p style="font-size: 0.78rem; color: var(--text-dim);">The <code>/pr-summary</code> skill checks off each AC in the Pull Request checklist based on its individual test execution result.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: 3-Tier Self-Healing Simulator -->
+    <section id="healing">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-badge">// AUTONOMOUS TRIAGE</span>
+          <h2 class="section-title">3-Tier Self-Healing Failure Classification</h2>
+          <p class="section-desc">Interactive failure triage simulator. Select a test failure type below to see how the Healer Agent classifies and resolves it.</p>
+        </div>
+      </div>
+
+      <div class="healing-simulator">
+        <div class="sim-controls">
+          <h3 class="sim-control-title">Select Failure Scenario:</h3>
+
+          <div class="scenario-btn active" id="btnScen1" onclick="selectHealingScenario('code')">
+            <span class="scenario-name">1. DOM Selector Shift / Stale Locator</span>
+            <span class="scenario-desc">Button class changed from .btn-next to [data-test='next']</span>
+          </div>
+
+          <div class="scenario-btn" id="btnScen2" onclick="selectHealingScenario('env')">
+            <span class="scenario-name">2. Environment / Locked QA Account</span>
+            <span class="scenario-desc">API returned 401 Unauthorized; test account is locked</span>
+          </div>
+
+          <div class="scenario-btn" id="btnScen3" onclick="selectHealingScenario('defect')">
+            <span class="scenario-name">3. Real Product Defect</span>
+            <span class="scenario-desc">Installment price calculated as $450 instead of $400</span>
+          </div>
+        </div>
+
+        <div class="sim-display" id="simDisplay">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="tier-badge tier-1" id="healTierBadge">Tier 1: automation-code</span>
+            <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-dim);" id="healLoopCount">Loop 1 of 3</span>
+          </div>
+
+          <div style="background: rgba(255, 255, 255, 0.03); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid rgba(255, 255, 255, 0.05);">
+            <div style="font-size: 0.75rem; color: var(--text-dim); font-family: var(--font-mono); margin-bottom: 0.35rem;">ERROR LOG DETECTED:</div>
+            <div style="font-family: var(--font-mono); font-size: 0.78rem; color: #f87171;" id="healErrorLog">
+              Error: locator.click: Target page, context or browser has been closed<br>
+              Waiting for locator('button.btn-next')... timed out after 5000ms
+            </div>
+          </div>
+
+          <div class="sim-flow-steps" id="healSteps">
+            <div class="flow-step-item">
+              <span class="flow-step-idx">1</span>
+              <span class="flow-step-text"><strong>Root Cause Analysis:</strong> Angular component markup updated; legacy CSS class is obsolete. Live DOM confirms <code>getByRole('button', { name: 'Next' })</code> is present.</span>
+            </div>
+            <div class="flow-step-item">
+              <span class="flow-step-idx">2</span>
+              <span class="flow-step-text"><strong>Autonomous Code Patch:</strong> Healer updates <code>pages/PaymentPlanPage.js</code> with the resilient role locator.</span>
+            </div>
+            <div class="flow-step-item">
+              <span class="flow-step-idx">3</span>
+              <span class="flow-step-text"><strong>Automatic Re-execution:</strong> Reruns <code>npx cucumber-js --tags @sep17</code>. Verified PASS on attempt 2!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: 6-Point Quality Gate Dashboard -->
+    <section id="quality">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-badge">// ENTERPRISE STANDARDS</span>
+          <h2 class="section-title">The 6-Point Quality Reviewer Gate (`/pr-reviewer`)</h2>
+          <p class="section-desc">Before code is pushed or a PR is opened, local changes are audited against these 6 non-negotiable enterprise quality rules.</p>
+        </div>
+      </div>
+
+      <div class="gate-grid">
+        <div class="gate-card">
+          <div class="gate-top">
+            <span class="gate-num">1</span>
+            <h3 class="gate-name">1:1 AC Coverage</h3>
+          </div>
+          <p class="gate-rule">Every header <code>#* AC</code> comment must produce an independent, dedicated scenario tagged <code>@&lt;tag&gt;-1</code>, <code>@&lt;tag&gt;-2</code>. No criteria may be omitted.</p>
+        </div>
+
+        <div class="gate-card">
+          <div class="gate-top">
+            <span class="gate-num">2</span>
+            <h3 class="gate-name">Locator Resilience</h3>
+          </div>
+          <p class="gate-rule">Mandates user-facing semantic locators (<code>getByRole</code>, <code>getByLabel</code>, <code>getByText</code>). <strong>Strictly forbids brittle absolute XPaths</strong> (<code>/html/body/...</code>).</p>
+        </div>
+
+        <div class="gate-card">
+          <div class="gate-top">
+            <span class="gate-num">3</span>
+            <h3 class="gate-name">Zero Hardcoded Waits</h3>
+          </div>
+          <p class="gate-rule">Relies 100% on Playwright's native auto-waiting and retrying assertions. <strong>Strictly bans <code>page.waitForTimeout()</code> and <code>setTimeout()</code>.</strong></p>
+        </div>
+
+        <div class="gate-card">
+          <div class="gate-top">
+            <span class="gate-num">4</span>
+            <h3 class="gate-name">Web-First Assertions</h3>
+          </div>
+          <p class="gate-rule">Every <code>Then</code> step must utilize asynchronous retrying assertions: <code>await expect(locator).toBeVisible()</code>. Bans synchronous assertions.</p>
+        </div>
+
+        <div class="gate-card">
+          <div class="gate-top">
+            <span class="gate-num">5</span>
+            <h3 class="gate-name">Page Object Discipline</h3>
+          </div>
+          <p class="gate-rule">Locators and page actions remain encapsulated in <code>pages/*.js</code>. Step definitions import page singletons from <code>globalPagesSetup.js</code>.</p>
+        </div>
+
+        <div class="gate-card">
+          <div class="gate-top">
+            <span class="gate-num">6</span>
+            <h3 class="gate-name">Security &amp; Secret Hygiene</h3>
+          </div>
+          <p class="gate-rule">Credentials must load strictly via <code>process.env</code> from <code>.env</code>. Zero passwords, auth tokens, or private endpoints in repository code.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: CLI & REPL Terminal Simulator -->
+    <section id="terminal">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-badge">// INTERACTIVE CLI</span>
+          <h2 class="section-title">Copilot CLI Terminal Simulator</h2>
+          <p class="section-desc">Experience how <code>.github/skills/test-automation-lifecycle/copilot-cli.js</code> operates in one-shot and interactive shell modes.</p>
+        </div>
+      </div>
+
+      <div class="terminal-wrapper">
+        <div class="terminal-topbar">
+          <div class="terminal-dots">
+            <span class="term-dot dot-close"></span>
+            <span class="term-dot dot-min"></span>
+            <span class="term-dot dot-max"></span>
+          </div>
+          <div class="term-title">bash — copilot (interactive swarm REPL)</div>
+          <div class="term-chips">
+            <button class="term-chip" onclick="runSimCommand('@sep17')">/test-automation-lifecycle @sep17</button>
+            <button class="term-chip" onclick="runSimCommand('/pr-reviewer')">/pr-reviewer</button>
+            <button class="term-chip" onclick="runSimCommand('/pr-summary')">/pr-summary</button>
+          </div>
+        </div>
+
+        <div class="term-body" id="termOutput">
+          <div class="term-line"><span class="term-p">➜</span> <span class="term-cmd">copilot</span></div>
+          <div class="term-line"><span class="term-accent">════════════════════════════════════════════════════════════════════════════════</span></div>
+          <div class="term-line"><span class="term-info">          🤖 GitHub Copilot CLI — BDD Test Automation Lifecycle (v2.4)</span></div>
+          <div class="term-line"><span class="term-accent">════════════════════════════════════════════════════════════════════════════════</span></div>
+          <div class="term-line"><span class="term-info">Interactive shell active. Type a command (e.g. /test-automation-lifecycle @sep17)</span></div>
+          <div class="term-line"><span class="term-p">copilot&gt;</span> <span class="term-cmd">/test-automation-lifecycle @sep17</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 1] Resolved target: features/payment-plans/ViewPaymentPlanOptionStep2.feature</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 1] Extracted 6 Acceptance Criteria from feature comments</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 2] Created and checked out branch: feature/sep17-automation</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 3] Planner Agent: Synthesized 6-point 1:1 AC scenario matrix</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 4] Explorer Agent: Verified user-facing locators via Playwright MCP</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 5] Generator Agent: Synthesized step defs &amp; completed feature file</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 6] Dry-run preflight check PASSED (0 duplicate steps, 0 undefined)</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 6] Executing Cucumber test suite with 2 parallel workers...</span></div>
+          <div class="term-line"><span class="term-ok">  2 scenarios (2 passed)</span></div>
+          <div class="term-line"><span class="term-ok">  8 steps (8 passed)</span></div>
+          <div class="term-line"><span class="term-ok">  Duration: 13.565s</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 8] Ephemeral scratch directory (.temp/) purged</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 9] /pr-reviewer: All 6 quality gates passed (Verdict: PASS ✅)</span></div>
+          <div class="term-line"><span class="term-ok">✔ [Stage 10] /pr-summary: Generated PR body and opened PR via GitHub MCP</span></div>
+          <div class="term-line"><span class="term-accent">🎉 Lifecycle successfully completed for @sep17!</span></div>
+          <div class="term-line"><span class="term-p">copilot&gt;</span> <span class="term-cmd" id="cursorCmd">_</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Artifact Lifecycle & State Matrix -->
+    <section id="matrix">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-badge">// DATA TRANSFORMATION MATRIX</span>
+          <h2 class="section-title">Artifact Lifecycle &amp; State Matrix</h2>
+          <p class="section-desc">Detailed tracking of all artifacts produced across the 10 lifecycle stages, indicating source inputs, destinations, and lifecycle status.</p>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Responsible Agent / Skill</th>
+              <th>Source Input</th>
+              <th>Produced Artifact</th>
+              <th>Target Location</th>
+              <th>Lifecycle Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Ingest</strong></td>
+              <td>Input Resolver</td>
+              <td>CLI / User Argument</td>
+              <td>Resolved Feature Path &amp; ACs</td>
+              <td>Memory</td>
+              <td><span class="status-pill pill-mem">Read-only</span></td>
+            </tr>
+            <tr>
+              <td><strong>2. Branch</strong></td>
+              <td>GitHub MCP</td>
+              <td>Feature Slug</td>
+              <td>New Git Branch</td>
+              <td>Local &amp; Remote Git</td>
+              <td><span class="status-pill pill-active">Active Branch</span></td>
+            </tr>
+            <tr>
+              <td><strong>3. Plan</strong></td>
+              <td>Planner Agent</td>
+              <td>Feature Header #* ACs</td>
+              <td>1:1 Scenario-to-POM Plan</td>
+              <td>Agent Context</td>
+              <td><span class="status-pill pill-mem">Ephemeral</span></td>
+            </tr>
+            <tr>
+              <td><strong>4. Explore</strong></td>
+              <td>Explorer Agent</td>
+              <td>Live Angular DOM</td>
+              <td>Validated Role Locators</td>
+              <td>Memory / <code>.temp/</code></td>
+              <td><span class="status-pill pill-purge">Auto-Purged</span></td>
+            </tr>
+            <tr>
+              <td><strong>5. Generate</strong></td>
+              <td>Generator Agent</td>
+              <td>Scenario Plan + Locators</td>
+              <td>Completed Feature &amp; Step Defs</td>
+              <td><code>features/</code> &amp; <code>steps/</code></td>
+              <td><span class="status-pill pill-perm">Permanent</span></td>
+            </tr>
+            <tr>
+              <td><strong>6. Execute</strong></td>
+              <td>Cucumber Runner</td>
+              <td>Target Tag / Feature</td>
+              <td>HTML Report &amp; Screenshots</td>
+              <td><code>reports/</code></td>
+              <td><span class="status-pill pill-perm">Test Artifact</span></td>
+            </tr>
+            <tr>
+              <td><strong>7. Heal</strong></td>
+              <td>Healer Agent</td>
+              <td>Failure JSON &amp; Screenshot</td>
+              <td>Targeted Code Patch</td>
+              <td><code>steps/</code> or <code>pages/</code></td>
+              <td><span class="status-pill pill-perm">Self-Healed</span></td>
+            </tr>
+            <tr>
+              <td><strong>8. Clean</strong></td>
+              <td>Master Orchestrator</td>
+              <td>Passing Test Verdict</td>
+              <td>Scratch Directory Cleanup</td>
+              <td><code>.temp/</code></td>
+              <td><span class="status-pill pill-purge">Destroyed</span></td>
+            </tr>
+            <tr>
+              <td><strong>9. Review</strong></td>
+              <td>/pr-reviewer Skill</td>
+              <td>Local Git Diff</td>
+              <td>6-Point Quality Audit Verdict</td>
+              <td>Terminal / Log</td>
+              <td><span class="status-pill pill-mem">Audit Gate</span></td>
+            </tr>
+            <tr>
+              <td><strong>10. PR</strong></td>
+              <td>/pr-summary Skill</td>
+              <td>Git Diff &amp; Execution Stats</td>
+              <td>Comprehensive Pull Request</td>
+              <td>GitHub Repository</td>
+              <td><span class="status-pill pill-perm">Ready for Review</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-badge">SEP AUTOMATION BDD JS // MULTI-AGENT ARCHITECTURE</div>
+    <p>Engineered strictly inside <code>.github/</code> for GitHub Copilot &amp; Claude Code agentic workflows.</p>
+    <p style="font-size: 0.78rem;">Playwright MCP • GitHub MCP • Cucumber.js • Enterprise Page Object Model</p>
+  </footer>
+
+  <!-- Interactive Logic -->
+  <script>
+    // Stage Inspector Data
+    const nodeDetails = {
+      trigger: {
+        title: "Master Skill Trigger",
+        meta: "Stage 0 // User or Copilot Invocation",
+        icon: "⚡",
+        type: "CLI / Slash Command",
+        mcp: "CLI Argument Parser",
+        input: "/test-automation-lifecycle @tag or path",
+        output: "Target identifier passed to orchestrator",
+        desc: "Entry point to the lifecycle. Can be triggered from GitHub Copilot chat or via the standalone CLI './.github/skills/test-automation-lifecycle/copilot-cli.js /test-automation-lifecycle @sep17'. Accepts normalized tags or file paths.",
+        snippet: "copilot> /test-automation-lifecycle @sep17\n# Or by path:\ncopilot> /test-automation-lifecycle features/payment-plans/ViewPaymentPlanOptionStep2.feature"
+      },
+      resolve: {
+        title: "Input Resolver & AC Ingestion",
+        meta: "Stage 1 // Target Normalizer",
+        icon: "🔍",
+        type: "Deterministic Parser",
+        mcp: "Filesystem Scanner",
+        input: "@sep17, sep17, or relative feature path",
+        output: "Resolved absolute path + extracted #* AC array",
+        desc: "Normalizes the input string. If given a tag, scans features/**/*.feature for matching @tag. Opens the file, extracts the story narrative, and parses all Acceptance Criteria lines prefixed with '#* AC'.",
+        snippet: "// Parsed AC Array:\n[\n  'AC1: Clicking on any plan activates next button',\n  'AC2: Clicking next button navigates to step 3',\n  'AC3: Stepper circles: 1 & 2 green, 3 blue'\n]"
+      },
+      git: {
+        title: "Git Branch Isolation",
+        meta: "Stage 2 // Workspace Hygiene",
+        icon: "🌿",
+        type: "Git Orchestration",
+        mcp: "GitHub MCP / Git CLI",
+        input: "Target feature tag or slug",
+        output: "Checked-out feature/<target>-automation branch on top of main",
+        desc: "Enforces branch isolation. Checks git status, switches to 'main' first, and cuts the new feature branch directly on top of 'main' (e.g. git checkout -B feature/sep17-automation main) so all test code starts from a clean, unpolluted baseline and never inherits changes from other branches.",
+        snippet: "$ git checkout main\n$ git checkout -B feature/sep17-automation main\nSwitched to a new branch 'feature/sep17-automation'"
+      },
+      planner: {
+        title: "Planner Agent",
+        meta: "Stage 3 // Requirements Architect",
+        icon: "🧠",
+        type: "Specialized BDD Planner",
+        mcp: "Read-only Workspace Context",
+        input: "Feature header #* ACs & pages/*.js methods",
+        output: "1:1 Scenario Plan & POM Gap Analysis",
+        desc: "Deconstructs requirements into discrete scenarios. Enforces the strict 1-to-1 AC-to-Scenario mapping rule (one Scenario or Scenario Outline per AC). Audits CommonSteps.js to prevent duplicate step declarations and plans catalog data mapping.",
+        snippet: "#* AC1 ➜ Scenario Outline: @sep17-1\n#* AC2 ➜ Scenario: @sep17-2\n#* AC3 ➜ Scenario: @sep17-3\n# Reuse: 'Given user is on the enrollment page'"
+      },
+      explorer: {
+        title: "Explorer Agent",
+        meta: "Stage 4 // DOM & State Auditor",
+        icon: "🔎",
+        type: "Live State Explorer",
+        mcp: "@modelcontextprotocol/server-playwright",
+        input: "Candidate elements & application URL",
+        output: "Validated resilient user-facing locators",
+        desc: "Interacts with the live QA environment (https://qa.sep.tdtm.cydeo.com/taws) via Playwright MCP. Inspects the accessibility tree, verifies Angular SPA state reactivity (disabled -> active buttons, stepper status), and confirms semantic locators.",
+        snippet: "await page.getByRole('button', { name: 'Next' })\nawait page.locator('.step-item.active')\n// Zero brittle absolute XPaths!"
+      },
+      generator: {
+        title: "Generator Agent",
+        meta: "Stage 5 // BDD Code Synthesizer",
+        icon: "⚡",
+        type: "Code Synthesizer",
+        mcp: "Filesystem Writer",
+        input: "Planned scenarios & validated locators",
+        output: "Completed .feature & steps/<epic>/<feature>.js",
+        desc: "Synthesizes Cucumber step definitions in steps/ and updates Page Objects in pages/. Enforces web-first retrying assertions (await expect(...)), imports singletons from globalPagesSetup.js, and strictly bans page.waitForTimeout().",
+        snippet: "When('user selects payment plan {string}', async function(plan) {\n  await paymentPlanPage.selectPaymentPlan(plan);\n});\nThen('next button should be enabled', async function() {\n  await expect(paymentPlanPage.nextButton).toBeEnabled();\n});"
+      },
+      cuke: {
+        title: "Cucumber Test Runner",
+        meta: "Stage 6 // Verification & Dry-Run",
+        icon: "🥒",
+        type: "Test Execution Engine",
+        mcp: "CLI Process Runner",
+        input: "Target tag (e.g. --tags @sep17)",
+        output: "Exit Code 0 (PASS) or failure JSON/screenshots",
+        desc: "First runs a preflight dry-run ('npx cucumber-js --dry-run') to guarantee zero undefined or duplicate steps. Then executes full headless Playwright browser tests across parallel workers, generating reports and failure screenshots.",
+        snippet: "$ npx cucumber-js --tags @sep17\n2 scenarios (2 passed)\n8 steps (8 passed)\nDuration: 13.565s"
+      },
+      healer: {
+        title: "Healer Agent",
+        meta: "Stage 7 // Autonomous Triage & Recovery",
+        icon: "🩹",
+        type: "Self-Healing Engine",
+        mcp: "Error Log & Screenshot Analyzer",
+        input: "Cucumber failure report & stack trace",
+        output: "Targeted code patch or Defect classification",
+        desc: "Classifies failures using 3 tiers: 1. automation-code (patches POM or step def and reruns, up to 3 times); 2. environment data (halts and alerts SDET of bad credentials/server downtime); 3. product defect (logs bug report with screenshot).",
+        snippet: "Triage Verdict: Tier 1 (automation-code)\nRoot Cause: Selector timeout on .btn-next\nPatch: Updated to page.getByRole('button', { name: 'Next' })\nRerun: PASSED"
+      },
+      purge: {
+        title: "Ephemeral Scratch Purge",
+        meta: "Stage 8 // Hygiene & Cleanup",
+        icon: "🧹",
+        type: "Purge Routine",
+        mcp: "Filesystem Cleaner",
+        input: "Verified pass verdict",
+        output: "Zero stray scratch files (.temp/ destroyed)",
+        desc: "Ensures no exploratory scratch scripts, temporary DOM dumps, or transient logs remain in the repository. Keeps git history completely pristine and enterprise-clean.",
+        snippet: "$ rm -rf .temp/\nWorking tree clean."
+      },
+      pr: {
+        title: "PR Reviewer & PR Summary Skills",
+        meta: "Stage 9 // Quality Gate & PR Authoring",
+        icon: "📝",
+        type: "Executive PR Engine",
+        mcp: "GitHub MCP",
+        input: "Git diff & Cucumber test execution stats",
+        output: "Audit Report & Formatted Pull Request",
+        desc: "First runs /pr-reviewer to verify all 6 enterprise quality criteria. Then invokes /pr-summary to compile a comprehensive Pull Request body including AC verification checklists, file changes, and test execution durations.",
+        snippet: "## Pull Request: [SEP-17] View Payment Plan Options\n### Acceptance Criteria Checklist:\n- [x] AC1: Click on any plan activates next button\n- [x] AC2: Clicking next navigates to step 3\n- [x] AC3: Stepper circles: 1 & 2 green, 3 blue\n\nExecution: 2/2 Scenarios Passed (100%)"
+      },
+      done: {
+        title: "GitHub Pull Request Opened",
+        meta: "Stage 10 // Ready for Human Peer Review",
+        icon: "🚀",
+        type: "GitHub Deployment",
+        mcp: "GitHub MCP",
+        input: "Pushed feature branch & PR body",
+        output: "Open PR on GitHub repository",
+        desc: "The final deliverable. The branch is pushed to GitHub and a verified Pull Request is opened for peer review. Zero manual SDET boilerplate required.",
+        snippet: "Pull Request #42 opened: feature/sep17-automation ➔ main\nReady for human review and merge."
+      },
+      envhalt: {
+        title: "Environment Discrepancy Halt",
+        meta: "Failure Path // Tier 2",
+        icon: "⚠️",
+        type: "Safety Guard",
+        mcp: "Logger",
+        input: "401 Unauthorized, 502 Bad Gateway, locked account",
+        output: "Alert message to SDET; halts execution",
+        desc: "Prevents code pollution when the application or test environment is unavailable. The agent does NOT modify test code when the server is down or test credentials are invalid.",
+        snippet: "[TIER 2 HALT] QA Environment Failure detected:\nHTTP 401: Test user account locked.\nPlease verify .env credentials before rerunning."
+      },
+      bughalt: {
+        title: "Product Defect Bug Report",
+        meta: "Failure Path // Tier 3",
+        icon: "🐞",
+        type: "Quality Gate Defect Logger",
+        mcp: "GitHub Issue Creator",
+        input: "Application assertion mismatch (e.g. $450 vs $400)",
+        output: "Bug report draft with attached screenshot",
+        desc: "Identifies legitimate application defects where test code matches specifications but the AUT misbehaves. Flags the defect with screenshot evidence rather than falsely altering test expectations.",
+        snippet: "[TIER 3 DEFECT] Application Bug Detected:\nExpected price: $400\nActual displayed: $450\nEvidence: reports/screenshots/step2-pricing-bug.png"
+      }
+    };
+
+    function selectNode(key) {
+      const data = nodeDetails[key];
+      if (!data) return;
+
+      // Update Inspector Panel
+      document.getElementById('inspectTitle').textContent = data.title;
+      document.getElementById('inspectMeta').textContent = data.meta;
+      document.getElementById('inspectIcon').textContent = data.icon;
+      document.getElementById('inspectType').textContent = data.type;
+      document.getElementById('inspectMcp').textContent = data.mcp;
+      document.getElementById('inspectInput').textContent = data.input;
+      document.getElementById('inspectOutput').textContent = data.output;
+      document.getElementById('inspectDesc').textContent = data.desc;
+      document.getElementById('inspectSnippet').textContent = data.snippet;
+
+      // Highlight SVG node
+      document.querySelectorAll('.svg-node').forEach(el => el.classList.remove('active'));
+      const targetSvg = document.getElementById('node-' + key);
+      if (targetSvg) targetSvg.classList.add('active');
+
+      // Scroll inspector into view smoothly if on small screens
+      if (window.innerWidth < 1100) {
+        document.getElementById('inspectorPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    // 3-Tier Healing Simulator
+    const healingScenarios = {
+      code: {
+        badgeClass: "tier-1",
+        badgeText: "Tier 1: automation-code",
+        loopText: "Loop 1 of 3 (Auto-Recoverable)",
+        error: "Error: locator.click: Target page closed or timeout\nWaiting for locator('button.btn-next')... timed out after 5000ms",
+        steps: [
+          { idx: 1, title: "Root Cause Analysis", text: "Angular template changed CSS class. Live Playwright MCP inspection reveals <code>getByRole('button', { name: 'Next' })</code> is visible and enabled." },
+          { idx: 2, title: "Autonomous Code Patch", text: "Healer updates <code>pages/PaymentPlanPage.js</code> with the robust semantic role locator." },
+          { idx: 3, title: "Automatic Re-execution", text: "Re-runs <code>npx cucumber-js --tags @sep17</code>. Verified PASS on attempt 2!" }
+        ]
+      },
+      env: {
+        badgeClass: "tier-2",
+        badgeText: "Tier 2: environment data",
+        loopText: "Immediate Halt (No Code Changes)",
+        error: "HTTP 401 Unauthorized / QA Auth Failure\nResponse: { error: 'Account locked: max attempts exceeded' }",
+        steps: [
+          { idx: 1, title: "Root Cause Analysis", text: "Backend authentication API rejected credentials in <code>.env</code>. Test account locked." },
+          { idx: 2, title: "Self-Preservation Guard", text: "Healer determines this is an external environmental discrepancy, NOT a test script error. Code is NOT modified." },
+          { idx: 3, title: "Halt & Actionable Alert", text: "Halts execution and outputs actionable instructions to unlock the QA credentials." }
+        ]
+      },
+      defect: {
+        badgeClass: "tier-3",
+        badgeText: "Tier 3: product defect",
+        loopText: "Immediate Halt (Bug Logged)",
+        error: "AssertionError: Expected price '$400' but received '$450'\n  at PaymentPlanStepDefs.js:42:15",
+        steps: [
+          { idx: 1, title: "Root Cause Analysis", text: "Application UI displays $450 while verified product catalog in <code>qa-data-reader.js</code> mandates $400." },
+          { idx: 2, title: "Defect Verification", text: "Healer checks screenshot in <code>reports/screenshots/</code> and confirms this is a genuine regression in the Angular frontend." },
+          { idx: 3, title: "Bug Report Generation", text: "Halts execution, preserves failure screenshot, and drafts a structured Jira/GitHub bug report." }
+        ]
+      }
+    };
+
+    function selectHealingScenario(type) {
+      document.querySelectorAll('.scenario-btn').forEach(btn => btn.classList.remove('active'));
+      if (type === 'code') document.getElementById('btnScen1').classList.add('active');
+      if (type === 'env') document.getElementById('btnScen2').classList.add('active');
+      if (type === 'defect') document.getElementById('btnScen3').classList.add('active');
+
+      const data = healingScenarios[type];
+      const badge = document.getElementById('healTierBadge');
+      badge.className = 'tier-badge ' + data.badgeClass;
+      badge.textContent = data.badgeText;
+      document.getElementById('healLoopCount').textContent = data.loopText;
+      document.getElementById('healErrorLog').innerHTML = data.error.replace(/\n/g, '<br>');
+
+      const stepsContainer = document.getElementById('healSteps');
+      stepsContainer.innerHTML = '';
+      data.steps.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'flow-step-item';
+        div.innerHTML = `<span class="flow-step-idx">${s.idx}</span><span class="flow-step-text"><strong>${s.title}:</strong> ${s.text}</span>`;
+        stepsContainer.appendChild(div);
+      });
+    }
+
+    // Interactive Terminal Simulator
+    function runSimCommand(cmd) {
+      const term = document.getElementById('termOutput');
+      const time = new Date().toLocaleTimeString();
+
+      if (cmd === '@sep17') {
+        term.innerHTML += `
+          <div class="term-line"><span class="term-p">copilot&gt;</span> <span class="term-cmd">/test-automation-lifecycle @sep17</span></div>
+          <div class="term-line"><span class="term-info">[${time}] 🔍 Scanning features/ for tag @sep17...</span></div>
+          <div class="term-line"><span class="term-ok">✔ Resolved: features/payment-plans/ViewPaymentPlanOptionStep2.feature</span></div>
+          <div class="term-line"><span class="term-ok">✔ Parsed 6 Acceptance Criteria from feature header comments</span></div>
+          <div class="term-line"><span class="term-ok">✔ Branch: feature/sep17-automation (checked out)</span></div>
+          <div class="term-line"><span class="term-ok">✔ 1-to-1 Plan: 6 dedicated scenarios designed</span></div>
+          <div class="term-line"><span class="term-ok">✔ MCP Explorer: Verified user-facing Angular locators</span></div>
+          <div class="term-line"><span class="term-ok">✔ Dry-run preflight check: PASSED (0 duplicates, 0 undefined)</span></div>
+          <div class="term-line"><span class="term-ok">✔ Execution: 2 scenarios passed, 8 steps passed (13.5s)</span></div>
+          <div class="term-line"><span class="term-accent">✔ /pr-reviewer quality checklist: 6/6 PASSED ✅</span></div>
+          <div class="term-line"><span class="term-ok">✔ /pr-summary: PR created on GitHub!</span></div>
+        `;
+      } else if (cmd === '/pr-reviewer') {
+        term.innerHTML += `
+          <div class="term-line"><span class="term-p">copilot&gt;</span> <span class="term-cmd">/pr-reviewer</span></div>
+          <div class="term-line"><span class="term-info">[${time}] Auditing local working tree against 6-point checklist...</span></div>
+          <div class="term-line"><span class="term-ok">  ✔ 1. 1-to-1 AC Coverage: Dedicated scenario for every AC</span></div>
+          <div class="term-line"><span class="term-ok">  ✔ 2. Locator Strategy: Semantic getByRole/Label locators verified</span></div>
+          <div class="term-line"><span class="term-ok">  ✔ 3. Timing: ZERO hardcoded sleeps (waitForTimeout) detected</span></div>
+          <div class="term-line"><span class="term-ok">  ✔ 4. Assertions: Web-first retrying expect() verified</span></div>
+          <div class="term-line"><span class="term-ok">  ✔ 5. Page Object Model: Encapsulated in pages/</span></div>
+          <div class="term-line"><span class="term-ok">  ✔ 6. Security Hygiene: Zero credentials hardcoded</span></div>
+          <div class="term-line"><span class="term-accent">VERDICT: PASS ✅ (Ready for Pull Request)</span></div>
+        `;
+      } else if (cmd === '/pr-summary') {
+        term.innerHTML += `
+          <div class="term-line"><span class="term-p">copilot&gt;</span> <span class="term-cmd">/pr-summary</span></div>
+          <div class="term-line"><span class="term-info">[${time}] Inspecting git diff and test reports...</span></div>
+          <div class="term-line"><span class="term-ok">✔ Extracted branch changes: 3 files changed (+84, -2)</span></div>
+          <div class="term-line"><span class="term-ok">✔ Verified test execution stats: 100% scenarios passed</span></div>
+          <div class="term-line"><span class="term-ok">✔ PR Body Markdown formatted with Executive Summary &amp; AC Checklist</span></div>
+          <div class="term-line"><span class="term-ok">✔ GitHub MCP: Pull Request opened!</span></div>
+        `;
+      }
+
+      term.scrollTop = term.scrollHeight;
+    }
+  </script>
+</body>
+</html>

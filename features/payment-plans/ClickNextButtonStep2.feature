@@ -12,6 +12,23 @@ Feature: Click on the next button on payment plans page   #! Test Only
     #* AC7: By default, the pay button should be displayed.
 
 
-    #TODO: Create scenarios that cover all the acceptance criteria
+    @sep16
+    Scenario: Selecting a plan enables Next and opens the review page
+        Given user is on the payment plan page
+        When user selects the "upfront" payment plan
+        Then the payment plan Next button should be enabled
+        When user clicks the payment plan Next button
+        Then the review payment page should be displayed
 
+    @sep16
+    Scenario: The review page shows its payment form, summary, back, and Pay controls
+        Given user is on the review payment page
+        Then the payment component should be displayed
+        And the price summary should be displayed
+        And the back button should be displayed on the review page
+        And the Pay button should be displayed
 
+    @sep16
+    Scenario: Checkout progress reflects the review step
+        Given user is on the review payment page
+        Then the first two checkout steps should be green and the review step blue

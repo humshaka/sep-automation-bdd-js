@@ -184,6 +184,8 @@ export class PaymentPlanPage extends BasePage {
 
   async clickNextButton() {
     await this.activeNextButton.click();
+    // Wait for page navigation and network to settle before returning
+    await this.page.waitForLoadState("networkidle");
   }
 
 
