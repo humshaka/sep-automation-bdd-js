@@ -9,4 +9,15 @@ Feature: Error messages for the invalid expiration number
     #*                  Your card's expiration year is in the past.
 
 
-     #TODO: Create scenarios that cover all the acceptance criteria
+    Background:
+        Given user is on the review payment page
+
+    @sep27
+    Scenario: An incomplete expiration date displays an immediate error
+        When user enters expiration date "1"
+        Then the expiration error should say "Your card's expiration date is incomplete."
+
+    @sep27
+    Scenario: An expired card displays an immediate error
+        When user enters expiration date "01/20"
+        Then the expiration error should say "Your card's expiration year is in the past."

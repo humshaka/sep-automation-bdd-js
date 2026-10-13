@@ -1,7 +1,6 @@
-import { Given, Then, When } from "@cucumber/cucumber";
-import { expect} from "@playwright/test";
-import { startApplicationPage, page } from "../../globalPagesSetup.js";
-import { productInfo } from "../../utilities/qa-data-reader.js";
+import { Then } from "@cucumber/cucumber";
+import { expect } from "@playwright/test";
+import { startApplicationPage } from "../../globalPagesSetup.js";
 
 
 Then("the product name should be displayed on the information card", async function () {
@@ -48,4 +47,3 @@ Then("the final refund date should be displayed", async function () {
   await expect(startApplicationPage.refundEndDate).toBeVisible();
   await expect(startApplicationPage.refundEndDate).not.toBeEmpty();
 });
-

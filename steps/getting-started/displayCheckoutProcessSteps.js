@@ -1,7 +1,6 @@
-import { Given, Then, When } from "@cucumber/cucumber";
-import { expect} from "@playwright/test";
-import { startApplicationPage, page } from "../../globalPagesSetup.js";
-import { productInfo } from "../../utilities/qa-data-reader.js";
+import { Then } from "@cucumber/cucumber";
+import { expect } from "@playwright/test";
+import { startApplicationPage } from "../../globalPagesSetup.js";
 
 
 Then("the Start application step should be displayed", async function () {
