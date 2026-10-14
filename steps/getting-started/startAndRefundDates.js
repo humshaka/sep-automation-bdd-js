@@ -17,13 +17,38 @@ Then("the refund date should be displayed", async function () {
 });
 
 Then("the displayed start date for the programme is correct", async function () {
-  await expect(startApplicationPage.programStartDate).toHaveText(
-    productInfo.startDate
-  );
+
+ const Actual_Start_DATE= await startApplicationPage.programStartDate.innerText();
+ const EXPECTED_START_DATE =productInfo.startDate;
+ //console.log("Actual Start Date:", Actual_Start_DATE);
+ //console.log("Expected Start Date:", EXPECTED_START_DATE);
+
+console.log(`Expected Upfront price${productInfo.prices[0].baseAmount}`)
+ console.log(`Expected Upfront amount price${productInfo.prices[0].upfrontDiscountAmount }`);
+ expect(Actual_Start_DATE).toBe(EXPECTED_START_DATE);
+
+  
+  
+  //await expect(startApplicationPage.programStartDate).toHaveText(
+    //productInfo.startDate
+  //);
 });
 
 Then("the displayed refund date for the programme is correct", async function () {
-  await expect(startApplicationPage.refundEndDate).toHaveText(
-    productInfo.refundDate
-  );
+
+    const Actual_Refund_DATE = await startApplicationPage.refundEndDate.innerText();
+    const EXPECTED_Refund_DATE = productInfo.refundDate;
+    //console.log("Actual Refund Date:", Actual_Refund_DATE);
+    //console.log("Expected Refund Date:", EXPECTED_Refund_DATE);
+
+    expect(Actual_Refund_DATE).toBe(EXPECTED_Refund_DATE);
+
+ 
+ 
+ 
+ 
+ 
+  // await expect(startApplicationPage.refundEndDate).toHaveText(
+   // productInfo.refundDate
+ // );
 });

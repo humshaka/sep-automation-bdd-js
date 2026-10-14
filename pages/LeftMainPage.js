@@ -18,7 +18,8 @@ export class LeftMainPage extends BasePage {
     );
 
     this.programName = page.locator("//p[@class='course-name']/a");
-    
+
+   
   }
 
   
